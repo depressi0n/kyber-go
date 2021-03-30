@@ -1,4 +1,4 @@
-module github.com/depressi0n/kyber-go
+module github.com/cryptosuite/kyber-go
 
 go 1.16
 

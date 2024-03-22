@@ -1,0 +1,76 @@
+package kyber
+
+const (
+	KYBER_N = 256
+	KYBER_Q = 3329
+
+	KYBER_SYMBYTES = 32 /* size in bytes of hashes, and seeds */
+	KYBER_SSBYTES  = 32 /* size in bytes of shared key */
+
+	KYBER_POLYBYTES = 384
+
+	KYBER_ETA2 = 2
+
+	KYBER_INDCPA_MSGBYTES = (KYBER_SYMBYTES)
+)
+
+type Parameters struct {
+	KYBER_K    int
+	KYBER_NAME string
+
+	KYBER_ETA1                   int
+	KYBER_POLYCOMPRESSEDBYTES    int
+	KYBER_POLYVECCOMPRESSEDBYTES int
+
+	KYBER_POLYVECBYTES          int
+	KYBER_INDCPA_PUBLICKEYBYTES int
+	KYBER_INDCPA_SECRETKEYBYTES int
+	KYBER_INDCPA_BYTES          int
+
+	KYBER_PUBLICKEYBYTES  int
+	KYBER_SECRETKEYBYTES  int
+	KYBER_CIPHERTEXTBYTES int
+}
+
+func NewParameters(k int) *Parameters { /* Change k for different security strengths */
+	var params Parameters
+	switch k {
+	case 2:
+		params.KYBER_NAME = "Kyber512"
+		params.KYBER_K = 2
+		params.KYBER_ETA1 = 3
+		params.KYBER_POLYCOMPRESSEDBYTES = 128
+		params.KYBER_POLYVECCOMPRESSEDBYTES = (params.KYBER_K * 320)
+	case 3:
+		params.KYBER_NAME = "Kyber768"
+		params.KYBER_K = 3
+		params.KYBER_ETA1 = 2
+		params.KYBER_POLYCOMPRESSEDBYTES = 128
+		params.KYBER_POLYVECCOMPRESSEDBYTES = (params.KYBER_K * 320)
+	case 4:
+		params.KYBER_NAME = "Kyber1024"
+		params.KYBER_K = 4
+		params.KYBER_ETA1 = 2
+		params.KYBER_POLYCOMPRESSEDBYTES = 160
+		params.KYBER_POLYVECCOMPRESSEDBYTES = (params.KYBER_K * 352)
+	default:
+		params.KYBER_NAME = "Kyber768"
+		params.KYBER_K = 3
+		params.KYBER_ETA1 = 2
+		params.KYBER_POLYCOMPRESSEDBYTES = 128
+		params.KYBER_POLYVECCOMPRESSEDBYTES = (params.KYBER_K * 320)
+	}
+
+	params.KYBER_POLYVECBYTES = (params.KYBER_K * KYBER_POLYBYTES)
+
+	params.KYBER_INDCPA_PUBLICKEYBYTES = (params.KYBER_POLYVECBYTES + KYBER_SYMBYTES)
+	params.KYBER_INDCPA_SECRETKEYBYTES = (params.KYBER_POLYVECBYTES)
+	params.KYBER_INDCPA_BYTES = (params.KYBER_POLYVECCOMPRESSEDBYTES + params.KYBER_POLYCOMPRESSEDBYTES)
+
+	params.KYBER_PUBLICKEYBYTES = (params.KYBER_INDCPA_PUBLICKEYBYTES)
+	params.KYBER_SECRETKEYBYTES = (params.KYBER_INDCPA_SECRETKEYBYTES + params.KYBER_INDCPA_PUBLICKEYBYTES + 2*KYBER_SYMBYTES)
+	params.KYBER_CIPHERTEXTBYTES = (params.KYBER_INDCPA_BYTES)
+
+	return &params
+
+}
